@@ -1,0 +1,45 @@
+{
+  "name": "stats",
+  "version": "1.0.0",
+  "description": "Will be used to track stats such a initiative, helth and if I havetime custom dmg rolls",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack",
+    "client-dev": "npx webpack --watch",
+    "server-dev": "npx nodemon  server/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JakeReid53/rfe2204-mvp.git"
+  },
+  "author": "Jake Reid",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JakeReid53/rfe2204-mvp/issues"
+  },
+  "homepage": "https://github.com/JakeReid53/rfe2204-mvp#readme",
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.1.1",
+    "@fortawesome/free-regular-svg-icons": "^6.1.1",
+    "@fortawesome/free-solid-svg-icons": "^6.1.1",
+    "@fortawesome/react-fontawesome": "^0.1.18",
+    "axios": "^0.27.2",
+    "babel-plugin-macros": "^3.1.0",
+    "express": "^4.18.1",
+    "pg": "^8.7.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.4.0",
+    "styled-components": "^5.3.5"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.18.5",
+    "@babel/preset-env": "^7.18.2",
+    "@babel/preset-react": "^7.17.12",
+    "babel-loader": "^8.2.5",
+    "html-webpack-plugin": "^5.5.0",
+    "webpack": "^5.73.0",
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^4.9.2"
+  }
+}
