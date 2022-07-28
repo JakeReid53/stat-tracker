@@ -63,7 +63,7 @@ const show = {
 const hide = {
   display: 'none'
 };
-var Buttons = ({setGame, next}) => {
+var Buttons = ({setGame, next, gameName}) => {
   var [id, setId] = useState(false);
   return(
     <Con>
@@ -83,7 +83,8 @@ var Buttons = ({setGame, next}) => {
                 data: {
                   name: event.target[0].value,
                   init: event.target[1].value,
-                  health: event.target[2].value
+                  health: event.target[2].value,
+                  game: gameName
                 }
               })
             }

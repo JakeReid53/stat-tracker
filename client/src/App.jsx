@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import Players from './components/Players.jsx'
-import Buttons from './components/buttons.jsx'
+import Players from './components/Players.jsx';
+import Buttons from './components/buttons.jsx';
+import GameSelect from './components/gameselect.jsx';
 
   var Grid = styled.div`
     display: grid;
@@ -86,6 +87,7 @@ var App = () => {
   var up = 0;
   const [players, setPlayers] = useState([]);
   const [turn, setTurn] = useState(0);
+  const [gameName, setGameName] = useState(false);
   function next() {
     if (turn >= players.length - 1) {
       setTurn(0);
@@ -107,7 +109,10 @@ var App = () => {
   function updTurn() {
     axios({
       method: 'get',
-      url: 'http://localhost:3000/games'
+      url: 'http://localhost:3000/games',
+      params: {
+        name: gameName
+      }
     })
     .then((res) => {
       setTurn(res.data.turn);
@@ -116,33 +121,42 @@ var App = () => {
   function upd() {
     axios({
       method: 'get',
-      url: 'http://localhost:3000/players'
+      url: 'http://localhost:3000/players',
+      params: {
+        game: gameName
+      }
       })
       .then(resu => {
         setPlayers(resu.data.sort(compareNumbers));
       });
   }
   useEffect(() => {
-    upd();
-    updTurn();
-  }, []);
+    if(!!gameName) {
+      upd();
+      updTurn();
+    }
+  }, [gameName]);
 
-  return (
-    <Grid>
-      <TitleWrapper>
-        <Title>Stat Tracker</Title>
-      </TitleWrapper>
-      <Play>
-        <Head>Players</Head>
-        <Players players={players} setGame={ upd } turn={turn} setUpdate={setUpdate} setTurn={setTurn}/>
-      </Play>
-      <ButtonWraper>
-        <Head>Menu</Head>
-        <Buttons setGame={upd} next={next} />
-      </ButtonWraper>
-      <Footer></Footer>
-    </Grid>
-  );
+  if (!gameName) {
+    return <GameSelect setGameName={setGameName}/>
+  } else {
+    return (
+      <Grid>
+        <TitleWrapper>
+          <Title>Stat Tracker</Title>
+        </TitleWrapper>
+        <Play>
+          <Head>Players</Head>
+          <Players players={players} setGame={ upd } turn={turn} setUpdate={setUpdate} setTurn={setTurn}/>
+        </Play>
+        <ButtonWraper>
+          <Head>Menu</Head>
+          <Buttons setGame={upd} next={next} gameName={gameName} />
+        </ButtonWraper>
+        <Footer></Footer>
+      </Grid>
+    );
+  }
 }
 
 export default App;

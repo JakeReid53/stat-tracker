@@ -11,35 +11,41 @@ const { Client } = require('pg');
 // }
 module.exports = {
   // findes if game name exsists otherwise creates it
-  // getGame: (req, res) => {
-  //   console.log(req.query)
-  //   var client = new Client({
-  //     host: 'localhost',
-  //     database: 'mvp',
-  //     port: 5432
-  //   });
-  //   client.connect();
-  //   client.query(`SELECT * FROM games WHERE name = $1`, [req.query.name])
-  //   .then(resu => {
-  //     if(resu.rows.length === 0) {
-  //       newGame(req.query.name, res, client);
-  //     } else {
-  //       res.send(resu.rows[0]);
-  //       client.end();
-  //     }
-  //   })
-  //   .catch(err => {
-  //     console.log(err);
-  //   })
-  // },
-  getTurn: (req, res) => {
+  postGame: (req, res) => {
     var client = new Client({
       host: 'localhost',
       database: 'mvp',
       port: 5432
     });
     client.connect();
-    client.query(`SELECT * FROM games WHERE id = 1`)
+    client.query(`INSERT INTO games (name, turn, disc) VALUES ($1, $2, $3) ON CONFLICT ON CONSTRAINT games_name_key DO NOTHING`, [req.body.name, req.body.turn, req.body.disc])
+    .then(resu => {
+      res.send();
+    });
+  },
+
+  getGames: (req, res) => {
+    var client = new Client({
+      host: 'localhost',
+      database: 'mvp',
+      port: 5432
+    });
+    client.connect();
+    client.query(`SELECT * FROM games`)
+    .then(resu => {
+      res.send(resu.rows);
+      client.end();
+    });
+  },
+
+  getGame: (req, res) => {
+    var client = new Client({
+      host: 'localhost',
+      database: 'mvp',
+      port: 5432
+    });
+    client.connect();
+    client.query(`SELECT * FROM games WHERE name = $1`, [req.query.name])
     .then(resu => {
       res.send(resu.rows[0]);
       client.end();
@@ -53,7 +59,7 @@ module.exports = {
       port: 5432
     });
     client.connect();
-    client.query(`UPDATE games SET turn = $1 WHERE id = 1`, [req.body.turn])
+    client.query(`UPDATE games SET turn = $1 WHERE name = $2`, [req.body.turn, req.body.name])
     .then(() => {
       res.send();
       client.end();
@@ -68,7 +74,7 @@ module.exports = {
       port: 5432
     });
     client.connect();
-    client.query(`SELECT * FROM players`)
+    client.query(`SELECT * FROM players WHERE game = $1`, [req.query.game])
       .then(resu => {
         res.send(resu.rows);
       });
@@ -82,7 +88,7 @@ module.exports = {
       port: 5432
     });
     client.connect();
-    client.query(`INSERT INTO players (init, health, name) VALUES ($1, $2, $3) ON CONFLICT ON CONSTRAINT players_name_key DO UPDATE SET init = $1, health = $2`, [req.body.init, req.body.health, req.body.name])
+    client.query(`INSERT INTO players (init, health, name, game) VALUES ($1, $2, $3, $4) ON CONFLICT ON CONSTRAINT players_name_key DO UPDATE SET init = $1, health = $2`, [req.body.init, req.body.health, req.body.name, req.body.game])
     .then(resu => {
       res.send();
     });
